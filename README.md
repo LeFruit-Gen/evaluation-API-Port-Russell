@@ -1,15 +1,27 @@
-# Port de Plaisance – Version 1.1 🚵️
+# Port de Plaisance – Version 1.2 ⚓
 
-Cette version étend la base du projet avec la **gestion des catways** et un **aperçu rapide dans le tableau de bord**.
+Cette version étend la base de gestion des utilisateurs en ajoutant la gestion complète des **réservations de catways**.
 
-## ✨ Fonctionnalités disponibles
+## ✨ Fonctionnalités ajoutées
 
-- ✅ Connexion utilisateur via email et mot de passe  
-- ✅ Création, modification et suppression d'utilisateurs  
-- ✅ Liste des utilisateurs  
-- ✅ Tableau de bord après connexion  
-- ✅ Consultation de la liste des catways  
-- ✅ Détail, création, modification et suppression de catways
+- ✅ Ajout d’une réservation pour un catway spécifique
+- ✅ Consultation des réservations par catway
+- ✅ Modification et suppression d’une réservation
+- ✅ Vue globale de toutes les réservations
+
+## 📂 Données initiales
+
+Le projet contient des **données pré-remplies** pour permettre les tests dès le démarrage.
+
+Ces fichiers sont situés dans le dossier `/data` :
+- `catwaysData.json` – Liste des catways
+- `reservationsData.json` – Réservations associées
+- `importCatways.js` / `importReservations.js` – Scripts d’import
+
+✅ Ces scripts ont été utilisés **uniquement pour remplir la base MongoDB lors du développement**.  
+Aucune action n’est nécessaire de votre part : **les données sont déjà présentes dans la base distante**.
+
+---
 
 ## 🔒 Authentification
 
@@ -62,16 +74,16 @@ Version en ligne : https://evaluation-api-port-russell.onrender.com/
 
 ---
 
+
 ## 📁 Structure principale
 
 ```
 - app.js
 - routes/
-  └── users.js
-  └── catways.js
-- data/
-  ├── catwaysData.json
-  └── importCatways.js
+  ├── users.js
+  ├── catways.js
+  ├── reservations.js
+  └── reservationsGlobal.js
 - views/
   ├── membres/
   │   ├── usersForm.ejs
@@ -79,7 +91,11 @@ Version en ligne : https://evaluation-api-port-russell.onrender.com/
   ├── catways/
   │   ├── catwaysForm.ejs
   │   ├── catwaysList.ejs
-  │   └── catwaysDetails.ejs
+  │   └── catwaysDetail.ejs
+  ├── reservations/
+  │   ├── reservationsForm.ejs
+  │   ├── reservationsList.ejs
+  │   └── allReservations.ejs
   ├── dashboard/
   │   └── index.ejs
   ├── layouts/
@@ -89,25 +105,13 @@ Version en ligne : https://evaluation-api-port-russell.onrender.com/
   └── home.ejs
 ```
 
----
-
-## 🦚 Données initiales
-
-Le projet contient des **données pré-remplies** pour permettre les tests dès le démarrage.
-
-Ces fichiers sont situés dans le dossier `/data` :
-- `catwaysData.json` – Liste des catways
-- `importCatways.js` – Script d’import associé
-
-✅ Ces scripts ont été utilisés **uniquement pour remplir la base MongoDB lors du développement**.  
-Aucune action n’est nécessaire de votre part : **les données sont déjà présentes dans la base distante**.
+> 📝 Les fichiers `reservationsGlobal.js` et `allReservations.ejs` ont été ajoutés pour répondre à la demande de visualiser toutes les réservations de manière centralisée.  
+> Bien que cela **ne respecte pas strictement les conventions REST**, cette approche facilite les tests et l’accès aux données.
 
 ---
 
 ## 🧪 À tester
 
-- Connexion via `/` (accueil)
-- Tableau de bord `/dashboard` (aperçu catways)
-- Liste des catways `/catways`
-- Formulaire de création `/catways/new`
-- Modification et suppression de catways
+- Accéder à un catway et créer une réservation (`/catways/:id/reservations/new`)
+- Modifier ou supprimer une réservation spécifique
+- Visualiser toutes les réservations depuis `/reservations/all`

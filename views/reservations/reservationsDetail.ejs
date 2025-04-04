@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Réservation</title>
+</head>
+<body>
+    <%- contentFor('body') %>
+
+    <% if (returnTo === 'all') { %>
+        <a href="/reservations/all">← Retour à la liste</a>
+    <% } else { %>
+        <a href="/catways/<%= reservation.catwayNumber %>/reservations">← Retour aux réservations du catway</a>
+    <% } %>
+
+    <h1>Détails de la Réservation</h1>
+
+    <ul>
+        <li><strong>Numéro du Catway :</strong> <%= reservation.catwayNumber %></li>
+        <li><strong>Nom du Client :</strong> <%= reservation.clientName %></li>
+        <li><strong>Nom du Bateau :</strong> <%= reservation.boatName %></li>
+        <li><strong>Date de début :</strong> <%= new Date(reservation.startDate).toLocaleString('fr-FR') %></li>
+        <li><strong>Date de fin :</strong> <%= new Date(reservation.endDate).toLocaleString('fr-FR') %></li>
+    </ul>
+
+    <p>
+        <a href="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>/edit">Modifier</a>
+        |
+        <form action="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>?_method=DELETE" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+        </form>
+        |
+        <a href="/catways/<%= reservation.catwayNumber %>/reservations">Retour aux réservations</a>
+    </p>
+</body>
+</html>

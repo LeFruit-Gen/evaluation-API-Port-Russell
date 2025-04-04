@@ -9,5 +9,11 @@
     <div class="main-container">
         <%- body %>
     </div>
+
+    <% if (typeof scripts !== 'undefined') { %>
+        <% scripts.forEach(function(script) { %>
+            <script src="<%= script %>"></script>
+        <% }); %>
+    <% } %>
 </body>
 </html>

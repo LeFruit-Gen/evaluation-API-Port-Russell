@@ -9,10 +9,11 @@
     <nav>
         <h2>Port de Plaisance</h2>
 
-        <p><strong>Connecté :</strong> <%= user.username %> (<%= user.email %>)</p>
+        <p><strong>Connecté :</strong> <%= currentUser.username %> (<%= currentUser.email %>)</p>
 
         <ul>
             <li><a href="/dashboard">Tableau de bord</a></li>
+            <li><a href="/catways">Catways</a></li>
             <li><a href="/users">Utilisateurs</a></li>
         </ul>
 
@@ -23,6 +24,10 @@
 
     <main>
         <p><%= new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+
+        <div>
+            <%- body %>
+        </div>
     </main>
 
     <% if (typeof scripts !== 'undefined') { %>

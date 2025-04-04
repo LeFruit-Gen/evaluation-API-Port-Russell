@@ -1,0 +1,22 @@
+<%- contentFor('body') %>
+
+<h1>Détails du Catway N°<%= catway.catwayNumber %></h1>
+
+<p><strong>Type :</strong> <%= catway.catwayType %></p>
+<p><strong>État :</strong> <%= catway.catwayState %></p>
+
+<% if (message && message.length > 0) { %>
+  <p><%= message %></p>
+<% } %>
+
+<hr>
+
+<a href="/catways">← Retour aux catways</a>
+
+<br><br>
+<a href="/catways/<%= catway.catwayNumber %>/edit">Modifier</a>
+
+<form action="/catways/<%= catway.catwayNumber %>" method="POST" style="margin-top: 10px;">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+</form>

@@ -1,0 +1,59 @@
+<%- contentFor('body') %>
+
+<h1>Liste Complète des Réservations</h1>
+<a href="/dashboard">← Retour au tableau de bord</a> |
+<a href="/catways">Nouvelle Réservation</a>
+
+<% if (message && message.length > 0) { %>
+  <p><strong><%= message %></strong></p>
+<% } %>
+
+<% if (error && error.length > 0) { %>
+  <p style="color: red;"><strong><%= error %></strong></p>
+<% } %>
+
+<% if (reservations.length === 0) { %>
+  <p>Aucune réservation trouvée.</p>
+<% } else { %>
+  <table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Catway N°</th>
+        <th>Client</th>
+        <th>Bateau</th>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% reservations.forEach(reservation => { %>
+        <tr>
+          <td><%= reservation.catwayNumber %></td>
+          <td><%= reservation.clientName %></td>
+          <td><%= reservation.boatName %></td>
+          <td><%= new Date(reservation.startDate).toLocaleDateString() %></td>
+          <td><%= new Date(reservation.endDate).toLocaleDateString() %></td>
+          <td>
+            <% if (new Date(reservation.endDate) < new Date()) { %>
+              Terminée
+            <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
+              En cours
+            <% } else { %>
+              À venir
+            <% } %>
+          </td>
+          <td>
+            <a href="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>/edit">Modifier</a> |
+            <form action="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>" method="POST" style="display:inline;">
+              <input type="hidden" name="_method" value="DELETE">
+              <input type="hidden" name="returnTo" value="all">
+              <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>

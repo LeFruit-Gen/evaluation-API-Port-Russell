@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Catway = require('../models/catways');
+const Reservation = require('../models/reservations');
 
 // GET /catways - Liste des catways
 router.get("/", async (req, res) => {

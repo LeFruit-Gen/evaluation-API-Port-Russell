@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= isEditing ? 'Modifier la réservation' : 'Nouvelle réservation' %></title>
+</head>
+<body>
+    <%- contentFor('body') %>
+
+    <a href="/catways/<%= catway.catwayNumber %>/reservations">← Retour aux réservations</a>
+    <h1><%= isEditing ? 'Modifier la réservation' : `Nouvelle réservation - Catway N°${catway.catwayNumber}` %></h1>
+
+    <% if (error && error.length > 0) { %>
+        <p><strong style="color: red;"><%= error %></strong></p>
+    <% } %>
+
+    <form action="<%= isEditing ? `/catways/${catway.catwayNumber}/reservations/${reservation._id}` : `/catways/${catway.catwayNumber}/reservations` %>" method="POST">
+        <% if (isEditing) { %>
+            <input type="hidden" name="_method" value="PUT">
+        <% } %>
+
+        <p>
+            <strong>Catway :</strong>
+            N°<%= catway.catwayNumber %> (<%= catway.catwayType %>) - <%= catway.catwayState %>
+        </p>
+
+        <p>
+            <label for="clientName">Nom du client :</label><br>
+            <input type="text" id="clientName" name="clientName"
+            value="<%= reservation ? reservation.clientName : user.username %>"
+            required>
+     
+        </p>
+
+        <p>
+            <label for="boatName">Nom du bateau :</label><br>
+            <input type="text" id="boatName" name="boatName"
+                   value="<%= reservation ? reservation.boatName : '' %>" required>
+        </p>
+
+        <p>
+            <label for="startDate">Date de début :</label><br>
+            <input type="datetime-local" id="startDate" name="startDate"
+                   value="<%= reservation ? new Date(reservation.startDate).toISOString().slice(0, 16) : '' %>"
+                   min="<%= new Date().toISOString().slice(0, 16) %>" required>
+        </p>
+
+        <p>
+            <label for="endDate">Date de fin :</label><br>
+            <input type="datetime-local" id="endDate" name="endDate"
+                   value="<%= reservation ? new Date(reservation.endDate).toISOString().slice(0, 16) : '' %>"
+                   min="<%= new Date().toISOString().slice(0, 16) %>" required>
+        </p>
+
+        <p>
+            <button type="submit"><%= isEditing ? 'Modifier' : 'Créer' %></button>
+            <a href="/catways/<%= catway.catwayNumber %>/reservations">Annuler</a>
+        </p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<%- contentFor('body') %>
+
+<h1>Liste des Catways</h1>
+
+<a href="/dashboard">← Retour au tableau de bord</a> |
+<a href="/catways/new">Ajouter un catway</a>
+
+<% if (message && message.length > 0) { %>
+  <p><%= message %></p>
+<% } %>
+
+<% if (error && error.length > 0) { %>
+  <p style="color: red;"><%= error %></p>
+<% } %>
+
+<% if (catways.length === 0) { %>
+  <p>Aucun catway trouvé.</p>
+<% } else { %>
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>Type</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% catways.forEach(catway => { %>
+        <tr>
+          <td><%= catway.catwayNumber %></td>
+          <td><%= catway.catwayType %></td>
+          <td><%= catway.catwayState %></td>
+          <td>
+            <a href="/catways/<%= catway.catwayNumber %>">Détails</a> |
+            <a href="/catways/<%= catway.catwayNumber %>/edit">Modifier</a>
+            <form action="/catways/<%= catway.catwayNumber %>" method="POST" style="display:inline;">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>

@@ -1,0 +1,44 @@
+<%- contentFor('body') %>
+
+<h1><%= isEditing ? "Modifier" : "Créer" %> un Catway</h1>
+
+<a href="/catways">← Retour aux catways</a>
+
+<% if (error) { %>
+  <p style="color: red;"><%= error %></p>
+<% } %>
+
+<form action="<%= isEditing ? '/catways/' + catway.catwayNumber : '/catways' %>" method="POST">
+  <% if (isEditing) { %>
+    <input type="hidden" name="_method" value="PUT">
+  <% } %>
+
+  <p>
+    <label for="catwayNumber">Numéro du Catway</label><br>
+    <input type="number" id="catwayNumber" name="catwayNumber"
+      value="<%= catway ? catway.catwayNumber : '' %>"
+      <%= isEditing ? 'readonly' : 'required' %>>
+  </p>
+
+  <p>
+    <label for="catwayType">Type du Catway</label><br>
+    <select id="catwayType" name="catwayType" <%= isEditing ? 'disabled' : 'required' %>>
+      <option value="short" <%= catway && catway.catwayType === 'short' ? 'selected' : '' %>>Short</option>
+      <option value="long" <%= catway && catway.catwayType === 'long' ? 'selected' : '' %>>Long</option>
+    </select><br>
+    <% if (isEditing) { %>
+      <small>Le type ne peut pas être modifié une fois le catway créé.</small>
+    <% } %>
+  </p>
+
+  <p>
+    <label for="catwayState">État du Catway</label><br>
+    <input type="text" id="catwayState" name="catwayState"
+      value="<%= catway ? catway.catwayState : '' %>" required>
+  </p>
+
+  <p>
+    <button type="submit"><%= isEditing ? "Modifier" : "Créer" %></button>
+    <a href="/catways">Annuler</a>
+  </p>
+</form>

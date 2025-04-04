@@ -1,13 +1,15 @@
-# Port de Plaisance – Version 1.0 🛥️
+# Port de Plaisance – Version 1.1 🚵️
 
-Cette version est une base minimaliste du projet. Elle permet la gestion simple des utilisateurs avec une authentification et un tableau de bord de connexion.
+Cette version étend la base du projet avec la **gestion des catways** et un **aperçu rapide dans le tableau de bord**.
 
 ## ✨ Fonctionnalités disponibles
 
-- ✅ Connexion utilisateur via email et mot de passe
-- ✅ Création, modification et suppression d'utilisateurs
-- ✅ Liste des utilisateurs
-- ✅ Tableau de bord après connexion
+- ✅ Connexion utilisateur via email et mot de passe  
+- ✅ Création, modification et suppression d'utilisateurs  
+- ✅ Liste des utilisateurs  
+- ✅ Tableau de bord après connexion  
+- ✅ Consultation de la liste des catways  
+- ✅ Détail, création, modification et suppression de catways
 
 ## 🔒 Authentification
 
@@ -24,16 +26,6 @@ Connexion via un token JWT stocké dans un cookie HTTP.
 - **Utilisateur standard**  
   Email : `user@example.com`  
   Mot de passe : `user123`
-
----
-
-## ⚙️ Installation du projet
-
-```bash
-git clone https://github.com/LeFruit-Gen/evaluation-API-Port-Russell.git
-cd nom-du-projet
-npm install
-```
 
 ---
 
@@ -66,6 +58,9 @@ npm start
 ```
 
 Le projet sera disponible sur [http://localhost:3000](http://localhost:3000)
+Version en ligne : https://evaluation-api-port-russell.onrender.com/
+
+---
 
 ## 📁 Structure principale
 
@@ -73,10 +68,20 @@ Le projet sera disponible sur [http://localhost:3000](http://localhost:3000)
 - app.js
 - routes/
   └── users.js
+  └── catways.js
+- data/
+  ├── catwaysData.json
+  └── importCatways.js
 - views/
   ├── membres/
   │   ├── usersForm.ejs
   │   └── usersList.ejs
+  ├── catways/
+  │   ├── catwaysForm.ejs
+  │   ├── catwaysList.ejs
+  │   └── catwaysDetails.ejs
+  ├── dashboard/
+  │   └── index.ejs
   ├── layouts/
   │   ├── layout.ejs
   │   └── dashboard.ejs
@@ -84,13 +89,25 @@ Le projet sera disponible sur [http://localhost:3000](http://localhost:3000)
   └── home.ejs
 ```
 
-## 🧪 À tester
+---
 
-- Se connecter depuis la page d'accueil (`/`)
-- Naviguer vers `/dashboard` une fois connecté
-- Accéder à `/users` pour gérer les utilisateurs
+## 🦚 Données initiales
+
+Le projet contient des **données pré-remplies** pour permettre les tests dès le démarrage.
+
+Ces fichiers sont situés dans le dossier `/data` :
+- `catwaysData.json` – Liste des catways
+- `importCatways.js` – Script d’import associé
+
+✅ Ces scripts ont été utilisés **uniquement pour remplir la base MongoDB lors du développement**.  
+Aucune action n’est nécessaire de votre part : **les données sont déjà présentes dans la base distante**.
 
 ---
 
-📌 Cette version **ne contient pas** la gestion des catways ni des réservations.  
-C’est une base fonctionnelle de gestion d’utilisateurs uniquement.
+## 🧪 À tester
+
+- Connexion via `/` (accueil)
+- Tableau de bord `/dashboard` (aperçu catways)
+- Liste des catways `/catways`
+- Formulaire de création `/catways/new`
+- Modification et suppression de catways

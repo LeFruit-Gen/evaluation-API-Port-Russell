@@ -6,6 +6,8 @@
     <title><%= isEditing ? 'Modifier' : 'Créer' %> un utilisateur</title>
 </head>
 <body>
+    <%- contentFor('body') %>
+
     <h1><%= isEditing ? 'Modifier' : 'Créer' %> un utilisateur</h1>
     <a href="/users">← Retour aux utilisateurs</a>
 

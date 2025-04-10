@@ -5,7 +5,7 @@ router.get('/', (req, res) => {
   res.render('documentation', {
     title: 'Documentation de l\'API',
     currentPage: 'api',
-    layout: 'layouts/layout'
+    layout: false
   });
 });
 

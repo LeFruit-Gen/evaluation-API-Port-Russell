@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const catwayRoutes = require('./routes/catways');
 const reservationRoutes = require('./routes/reservations');
+const reservationsGlobalRoutes = require('./routes/reservationsGlobal');
 const usersRoutes = require('./routes/users');
 require("dotenv").config({ path: "./.env/.env" });
 const flash = require('connect-flash');
@@ -21,6 +22,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('layout', 'layouts/layout');  
+app.set('layout extractScripts', true);  
+app.set('layout extractStyles', true);   
 
 // Middleware pour parser le corps des requêtes
 app.use(express.urlencoded({ extended: true }));
@@ -35,6 +38,9 @@ app.use(methodOverride(function (req, res) {
     return method;
   }
 }));
+
+// Servir les fichiers statiques
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuration des sessions et des messages flash
 app.use(session({
@@ -82,8 +88,8 @@ app.use((req, res, next) => {
 app.use('/users', usersRoutes);
 app.use('/catways', catwayRoutes);
 app.use('/catways/:id/reservations', reservationRoutes);
-app.use('/reservations', reservationRoutes);
-app.use('/api/docs', documentationRoutes);
+app.use('/reservations', reservationsGlobalRoutes);
+app.use('/documentation', documentationRoutes);
 
 // Route par défaut
 app.get('/', (req, res) => {

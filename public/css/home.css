@@ -1,0 +1,190 @@
+:root {
+    --primary-color: #2c3e50;
+    --primary-dark-color: #1a252f;
+    --secondary-color: #7f8c8d;
+    --dark-color: #343a40;
+    --background-color: #f5f5f5;
+    --background-dark-color: #e8e8e8;
+    
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+    --border-radius: 8px;
+    
+    --font-sm: 0.875rem;
+    --font-md: 1.1rem;
+    --font-lg: 1.2rem;
+    --font-xl: 1.8rem;
+    --font-xxl: 2.5rem;
+    
+    --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-focus: 0 0 0 2px #2c3e50;
+    --border-color: #ddd;
+    --border-radius-sm: 4px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+}
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+    padding: var(--spacing-xl) max(var(--spacing-xl), 5vw);
+}
+.home-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+.home-header h1 {
+    font-size: var(--font-xxl);
+    color: var(--primary-color);
+    margin: 0;
+}
+.subtitle {
+    color: var(--secondary-color);
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-lg);
+}
+.home-main {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: var(--spacing-xl) 0;
+}
+.presentation {
+    flex: 1;
+    max-width: 500px;
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+}
+.presentation h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-xl);
+}
+.presentation ul {
+    list-style: none;
+    padding: 0;
+}
+.presentation li {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-md);
+    position: relative;
+    color: var(--dark-color);
+}
+.presentation li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-size: 1.2em;
+    line-height: 1;
+}
+.auth-section {
+    flex: 1;
+    max-width: 400px;
+}
+.auth-box {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+}
+.auth-box h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-xl);
+    text-align: center;
+}
+.login-form .form-group {
+    margin-bottom: var(--spacing-md);
+}
+.login-form label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--dark-color);
+}
+.login-form input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-base);
+}
+.login-form input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+.auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+}
+.button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+}
+.button-primary {
+    background: var(--primary-color);
+    color: white;
+}
+.button-primary:hover {
+    background: var(--primary-dark-color);
+}
+.button-secondary {
+    background: var(--background-color);
+    color: var(--primary-color);
+}
+.button-secondary:hover {
+    background: var(--background-dark-color);
+}
+.forgot-password {
+    display: block;
+    text-align: center;
+    color: var(--secondary-color);
+    text-decoration: none;
+    margin-top: var(--spacing-md);
+    font-size: var(--font-sm);
+}
+.forgot-password:hover {
+    color: var(--primary-color);
+}
+.error-message {
+    background: #ffebee;
+    color: var(--danger-color);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+.home-footer {
+    text-align: center;
+    padding: var(--spacing-lg) 0;
+    color: var(--secondary-color);
+}

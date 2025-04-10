@@ -1,0 +1,103 @@
+<div class="container">
+    <div class="page-header">
+        <% if (isGlobalList) { %>
+            <a href="/dashboard" class="btn btn-secondary">← Retour au tableau de bord</a>
+            <h1 class="page-title">Réservations en cours et à venir</h1>
+        <% } else { %>
+            <a href="/catways" class="btn btn-secondary">← Retour aux catways</a>
+            <h1 class="page-title">Réservations du Catway N°<%= catway.catwayNumber %></h1>
+            <a href="/catways/<%= catway.catwayNumber %>/reservations/new" class="btn btn-primary">Nouvelle réservation</a>
+        <% } %>
+    </div>
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="table-container">
+        <% if (reservations.length === 0) { %>
+            <p class="no-data">Aucune réservation trouvée.</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <% if (isGlobalList) { %>
+                            <th>Catway N°</th>
+                        <% } %>
+                        <th>Client</th>
+                        <th>Bateau</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reservations.forEach(reservation => { 
+                        const now = new Date();
+                        const start = new Date(reservation.startDate);
+                        const end = new Date(reservation.endDate);
+                        let status, statusClass;
+                        
+                        if (end < now) {
+                            status = "Terminée";
+                            statusClass = "status-terminated";
+                        } else if (start <= now && end >= now) {
+                            status = "En cours";
+                            statusClass = "status-active";
+                        } else {
+                            status = "À venir";
+                            statusClass = "status-upcoming";
+                        }
+                    %>
+                        <tr class="<%= !reservation.catwayExists ? 'reservation-orphaned' : '' %>">
+                            <% if (isGlobalList) { %>
+                                <td>
+                                    <% if (reservation.catwayExists) { %>
+                                        <a href="/catways/<%= reservation.catwayNumber %>/reservations" class="link-primary">
+                                            <%= reservation.catwayNumber %>
+                                        </a>
+                                    <% } else { %>
+                                        <%= reservation.catwayNumber %>
+                                        <span class="warning-badge" title="Ce catway n'existe plus">⚠️</span>
+                                    <% } %>
+                                </td>
+                            <% } %>
+                            <td><%= reservation.clientName %></td>
+                            <td><%= reservation.boatName %></td>
+                            <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) %></td>
+                            <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) %></td>
+                            <td><span class="status-badge <%= statusClass %>"><%= status %></span></td>
+                            <td class="actions">
+                                <% if (reservation.isOwner) { %>
+                                    <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-primary">Modifier</a>
+                                    <form action="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>" method="POST" class="d-inline">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>

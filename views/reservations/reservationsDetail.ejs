@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Réservation</title>
+</head>
+<body>
+    <%- contentFor('body') %>
+    <div class="container">
+        <div class="page-header">
+            <% if (returnTo === 'all') { %>
+                <a href="/reservations/all" class="btn btn-secondary">← Retour à la liste</a>
+            <% } else { %>
+                <a href="/catways/<%= reservation.catwayNumber %>/reservations" class="btn btn-secondary">← Retour aux réservations du catway</a>
+            <% } %>
+            <h1 class="page-title">Détails de la Réservation</h1>
+        </div>
+        <div class="detail-container">
+            <div class="detail-item">
+                <strong>Numéro du Catway:</strong>
+                <span><%= reservation.catwayNumber %></span>
+            </div>
+            <div class="detail-item">
+                <strong>Nom du Client:</strong>
+                <span><%= reservation.clientName %></span>
+            </div>
+            <div class="detail-item">
+                <strong>Nom du Bateau:</strong>
+                <span><%= reservation.boatName %></span>
+            </div>
+            <div class="detail-item">
+                <strong>Date de début:</strong>
+                <span><%= new Date(reservation.startDate).toLocaleString('fr-FR') %></span>
+            </div>
+            <div class="detail-item">
+                <strong>Date de fin:</strong>
+                <span><%= new Date(reservation.endDate).toLocaleString('fr-FR') %></span>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-secondary">Modifier</a>
+            <form action="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>?_method=DELETE" method="POST" class="inline-form">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+            </form>
+            <a href="/catways/<%= reservation.catwayNumber %>/reservations" class="btn btn-secondary">Retour aux réservations</a>
+        </div>
+    </div>
+</body>
+</html>

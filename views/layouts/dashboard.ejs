@@ -4,45 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= typeof title !== 'undefined' ? `${title} - Port de Plaisance` : 'Port de Plaisance' %></title>
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <nav>
-        <div>
+<body class="dashboard-layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
             <h2>Port de Plaisance</h2>
         </div>
-        <div>
-            <div>
+        <div class="user-info">
+            <div class="user-avatar">
                 <i class="fas fa-user-circle"></i>
             </div>
-            <div>
-                <p><%= user.username %></p>
-                <p><%= user.email %></p>
-                <p><%= user.role %></p>
+            <div class="user-details">
+                <p class="user-name"><%= user.username %></p>
+                <p class="user-email"><%= user.email %></p>
+                <p class="user-role"><%= user.role %></p>
             </div>
         </div>
-        <ul>
+        <ul class="nav-links">
             <li><a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Tableau de bord</a></li>
             <li><a href="/catways" class="<%= currentPage === 'catways' ? 'active' : '' %>"><i class="fas fa-ship"></i> Catways</a></li>
             <% if (user && user.role === 'admin') { %>
                 <li><a href="/reservations/all" class="<%= currentPage === 'reservations' ? 'active' : '' %>"><i class="fas fa-calendar-alt"></i> Réservations</a></li>
                 <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
-                <li><a href="/api/docs" class="<%= currentPage === 'api' ? 'active' : '' %>"><i class="fas fa-book"></i> Documentation API</a></li>
+                <li><a href="/documentation" target="_blank" class="<%= currentPage === 'api' ? 'active' : '' %>"><i class="fas fa-book"></i> Documentation API</a></li>
             <% } %>
             <form action="/users/logout" method="POST">
-                <button type="submit">
+                <button type="submit" class="logout-button">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </button>
             </form>
         </ul>
     </nav>
-    <main>
-        <div>
-            <div>
+    <main class="main-content">
+        <div class="content-header">
+            <div class="current-date">
                 <%= new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
             </div>
         </div>
-        <div>
+        <div class="content-body">
             <%- body %>
         </div>
     </main>

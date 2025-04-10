@@ -13,7 +13,8 @@ router.get('/new', isAuthenticated, isAdmin, (req, res) => {
         message: "Veuillez remplir les informations de l'utilisateur.",
         currentUser: req.user,
         isEditing: false,
-        layout: 'layouts/layout'
+        layout: 'layouts/list',
+        currentPage: 'users'
     });
 });
 
@@ -24,7 +25,8 @@ router.get('/edit/:email', isAuthenticated, isAdmin, async (req, res) => {
         if (!user) {
             return res.status(404).render('error', { 
                 error: 'Utilisateur non trouvé',
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
         res.render('membres/usersForm', { 
@@ -32,12 +34,14 @@ router.get('/edit/:email', isAuthenticated, isAdmin, async (req, res) => {
             message: null,
             currentUser: req.user,
             isEditing: true,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     } catch (err) {
         res.status(400).render('error', { 
             error: `Erreur lors de la recherche de l'utilisateur : ${err.message}`,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     }
 });
@@ -49,18 +53,21 @@ router.get('/:email/role', isAuthenticated, isAdmin, async (req, res) => {
         if (!user) {
             return res.status(404).render('error', { 
                 error: 'Utilisateur non trouvé',
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
         res.render('membres/changeRole', { 
             user, 
             currentUser: req.user,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     } catch (err) {
         res.status(400).render('error', { 
             error: `Erreur lors de la recherche de l'utilisateur : ${err.message}`,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     }
 });
@@ -76,7 +83,8 @@ router.post('/', isAuthenticated, isAdmin, async (req, res) => {
                 message: "Cet email ou nom d'utilisateur existe déjà",
                 currentUser: req.user,
                 isEditing: false,
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
         const newUser = new User({ username, email, password, role });
@@ -98,12 +106,14 @@ router.get('/', isAuthenticated, isAdmin, async (req, res) => {
             message: req.flash('success'),
             error: req.flash('error'),
             currentUser: req.user,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     } catch (err) {
         res.status(400).render('error', { 
             error: `Erreur lors de la récupération des utilisateurs : ${err.message}`,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     }
 });
@@ -115,7 +125,8 @@ router.put('/:email', isAuthenticated, isAdmin, async (req, res) => {
         if (!user) {
             return res.status(404).render('error', {
                 error: 'Utilisateur non trouvé',
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
 
@@ -140,12 +151,14 @@ router.put('/:email', isAuthenticated, isAdmin, async (req, res) => {
                 message: "Cet email est déjà utilisé",
                 currentUser: req.user,
                 isEditing: true,
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
         res.status(400).render('error', {
             error: `Erreur lors de la modification de l'utilisateur : ${err.message}`,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     }
 });
@@ -198,7 +211,8 @@ router.post('/login', async (req, res) => {
         if (!user || !(await user.isValidPassword(password))) {
             return res.status(401).render('home', {
                 error: 'Email ou mot de passe incorrect',
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
 
@@ -220,7 +234,8 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(400).render('home', {
             error: `Erreur lors de la connexion : ${err.message}`,
-            layout: 'layouts/layout'
+            layout: 'layouts/list',
+            currentPage: 'users'
         });
     }
 });
@@ -238,7 +253,8 @@ router.all('/logout', isAuthenticated, (req, res) => {
         if (err) {
             res.status(500).render('error', { 
                 error: 'Erreur lors de la déconnexion',
-                layout: 'layouts/layout'
+                layout: 'layouts/list',
+                currentPage: 'users'
             });
         }
         res.redirect('/');

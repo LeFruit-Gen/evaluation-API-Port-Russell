@@ -1,65 +1,192 @@
 <%- contentFor('body') %>
 
-<div>
-    <h3>Aperçu des Catways</h3>
-    <div>
-        <div>
-            <span>Total: </span>
-            <span><%= stats.totalCatways %></span>
-        </div>
-        <div>
-            <span>Occupés: </span>
-            <span><%= stats.occupiedCatways %></span>
-        </div>
-        <div>
-            <span>Disponibles: </span>
-            <span><%= stats.availableCatways %></span>
+<div class="dashboard-grid">
+    <div class="dashboard-card stats-card">
+        <h3>Aperçu des Catways</h3>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Total</span>
+                <span class="stat-value"><%= stats.totalCatways %></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Occupés</span>
+                <span class="stat-value"><%= stats.occupiedCatways %></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Disponibles</span>
+                <span class="stat-value"><%= stats.availableCatways %></span>
+            </div>
         </div>
     </div>
+    <% if (user && user.role === 'admin') { %>
+        <div class="dashboard-card stats-card">
+            <h3>Réservations du jour</h3>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Nouvelles</span>
+                    <span class="stat-value"><%= stats.newReservations %></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">En cours</span>
+                    <span class="stat-value"><%= stats.activeReservations %></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Terminées</span>
+                    <span class="stat-value"><%= stats.completedReservations %></span>
+                </div>
+            </div>
+        </div>
+    <% } %>
 </div>
-
-<div>
-    <h3>Mes réservations</h3>
-    <% if (activeReservations && activeReservations.length > 0) { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>N° Catway</th>
-                    <th>Bateau</th>
-                    <th>Date de début</th>
-                    <th>Date de fin</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% activeReservations.forEach(reservation => { %>
-                    <tr>
-                        <td><%= reservation.catwayNumber %></td>
-                        <td><%= reservation.boatName %></td>
-                        <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
-                        <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
-                        <td>
-                            <% if (new Date(reservation.endDate) < new Date()) { %>
-                                Terminée
-                            <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
-                                En cours
-                            <% } else { %>
-                                À venir
-                            <% } %>
-                        </td>
-                        <td>
-                            <a href="/reservations/<%= reservation._id %>/edit">Modifier</a>
-                            <form action="/reservations/<%= reservation._id %>" method="POST" style="display: inline;">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
+<div class="content-section">
+    <% if (user && user.role === 'admin') { %>
+        <div class="tables-section">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Réservations en cours</h3>
+                </div>
+                <div class="card-content">
+                    <% if (activeReservations && activeReservations.length > 0) { %>
+                        <div class="table-container">
+                            <table class="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>N° Catway</th>
+                                        <th>Client</th>
+                                        <th>Bateau</th>
+                                        <th>Date de début</th>
+                                        <th>Date de fin</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% activeReservations.forEach(reservation => { %>
+                                        <tr>
+                                            <td><%= reservation.catwayNumber %></td>
+                                            <td><%= reservation.clientName %></td>
+                                            <td><%= reservation.boatName %></td>
+                                            <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                                            <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                                            <td>
+                                                <% if (new Date(reservation.endDate) < new Date()) { %>
+                                                    <span class="status-badge status-terminated">Terminée</span>
+                                                <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
+                                                    <span class="status-badge status-active">En cours</span>
+                                                <% } else { %>
+                                                    <span class="status-badge status-upcoming">À venir</span>
+                                                <% } %>
+                                            </td>
+                                            <td class="actions">
+                                                <a href="/reservations/<%= reservation._id %>/edit" class="btn btn-secondary">Modifier</a>
+                                                <form action="/reservations/<%= reservation._id %>" method="POST" class="d-inline">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="no-data">Aucune réservation en cours</p>
+                    <% } %>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Historique des 10 dernières réservations</h3>
+                </div>
+                <div class="card-content">
+                    <% if (recentReservations && recentReservations.length > 0) { %>
+                        <div class="table-container">
+                            <table class="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>N° Catway</th>
+                                        <th>Client</th>
+                                        <th>Bateau</th>
+                                        <th>Début</th>
+                                        <th>Fin</th>
+                                        <th>Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% recentReservations.forEach(reservation => { %>
+                                        <tr>
+                                            <td><%= reservation.catwayNumber %></td>
+                                            <td><%= reservation.clientName %></td>
+                                            <td><%= reservation.boatName %></td>
+                                            <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                                            <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                                            <td>
+                                                <span class="status-badge status-terminated">Terminée</span>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="no-data">Aucune réservation récente</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     <% } else { %>
-        <p>Vous n'avez aucune réservation en cours</p>
+        <div class="tables-section">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Mes réservations</h3>
+                </div>
+                <div class="card-content">
+                    <% if (activeReservations && activeReservations.length > 0) { %>
+                        <div class="table-container">
+                            <table class="dashboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>N° Catway</th>
+                                        <th>Bateau</th>
+                                        <th>Date de début</th>
+                                        <th>Date de fin</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% activeReservations.forEach(reservation => { %>
+                                        <tr>
+                                            <td><%= reservation.catwayNumber %></td>
+                                            <td><%= reservation.boatName %></td>
+                                            <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                                            <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                                            <td>
+                                                <% if (new Date(reservation.endDate) < new Date()) { %>
+                                                    <span class="status-badge status-terminated">Terminée</span>
+                                                <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
+                                                    <span class="status-badge status-active">En cours</span>
+                                                <% } else { %>
+                                                    <span class="status-badge status-upcoming">À venir</span>
+                                                <% } %>
+                                            </td>
+                                            <td class="actions">
+                                                <a href="/reservations/<%= reservation._id %>/edit" class="btn btn-secondary">Modifier</a>
+                                                <form action="/reservations/<%= reservation._id %>" method="POST" class="d-inline">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="no-data">Vous n'avez aucune réservation en cours</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     <% } %>
 </div>

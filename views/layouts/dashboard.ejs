@@ -16,15 +16,14 @@
                 <i class="fas fa-user-circle"></i>
             </div>
             <div class="user-details">
-                <p class="user-name"><%= currentUser.username %></p>
-                <p class="user-email"><%= currentUser.email %></p>
+                <p class="user-name"><%= user.username %></p>
+                <p class="user-email"><%= user.email %></p>
             </div>
         </div>
         <ul class="nav-links">
             <li><a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Tableau de bord</a></li>
-            <% if (currentUser && currentUser.role === 'admin') { %>
-                <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
-            <% } %>
+            <li><a href="/catways" class="<%= currentPage === 'catways' ? 'active' : '' %>"><i class="fas fa-ship"></i> Catways</a></li>
+            <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
             <form action="/users/logout" method="POST">
                 <button type="submit" class="logout-button">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion

@@ -1,0 +1,41 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/catways" class="btn btn-secondary">← Retour aux catways</a>
+        <h1 class="page-title">Détails du Catway N°<%= catway.catwayNumber %></h1>
+    </div>
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Type</th>
+                    <th>État</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><%= catway.catwayNumber %></td>
+                    <td><%= catway.catwayType %></td>
+                    <td><%= catway.catwayState %></td>
+                    <td class="actions">
+                        <% if (currentUser && currentUser.role === 'admin') { %>
+                            <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-secondary">Modifier</a>
+                            <form action="/catways/<%= catway.catwayNumber %>" method="POST" class="inline-form">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -6,39 +6,43 @@
     <title><%= typeof title !== 'undefined' ? `${title} - Port de Plaisance` : 'Port de Plaisance' %></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="dashboard-layout">
-    <nav class="sidebar">
-        <div class="sidebar-header">
+<body>
+    <nav>
+        <div>
             <h2>Port de Plaisance</h2>
         </div>
-        <div class="user-info">
-            <div class="user-avatar">
+        <div>
+            <div>
                 <i class="fas fa-user-circle"></i>
             </div>
-            <div class="user-details">
-                <p class="user-name"><%= user.username %></p>
-                <p class="user-email"><%= user.email %></p>
+            <div>
+                <p><%= user.username %></p>
+                <p><%= user.email %></p>
+                <p><%= user.role %></p>
             </div>
         </div>
-        <ul class="nav-links">
+        <ul>
             <li><a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Tableau de bord</a></li>
             <li><a href="/catways" class="<%= currentPage === 'catways' ? 'active' : '' %>"><i class="fas fa-ship"></i> Catways</a></li>
-            <li><a href="/reservations/all" class="<%= currentPage === 'reservations' ? 'active' : '' %>"><i class="fas fa-calendar-alt"></i> Réservations</a></li>
-            <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
+            <% if (user && user.role === 'admin') { %>
+                <li><a href="/reservations/all" class="<%= currentPage === 'reservations' ? 'active' : '' %>"><i class="fas fa-calendar-alt"></i> Réservations</a></li>
+                <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
+                <li><a href="/api/docs" class="<%= currentPage === 'api' ? 'active' : '' %>"><i class="fas fa-book"></i> Documentation API</a></li>
+            <% } %>
             <form action="/users/logout" method="POST">
-                <button type="submit" class="logout-button">
+                <button type="submit">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </button>
             </form>
         </ul>
     </nav>
-    <main class="main-content">
-        <div class="content-header">
-            <div class="current-date">
+    <main>
+        <div>
+            <div>
                 <%= new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
             </div>
         </div>
-        <div class="content-body">
+        <div>
             <%- body %>
         </div>
     </main>

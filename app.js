@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const methodOverride = require('method-override');
 const path = require('path');
+const documentationRoutes = require('./routes/documentation');
 const expressLayouts = require('express-ejs-layouts');
 const isAuthenticated = require('./middlewares/authMiddleware');
 
@@ -19,7 +20,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
-app.set('layout', 'layouts/layout');
+app.set('layout', 'layouts/layout');  
 
 // Middleware pour parser le corps des requêtes
 app.use(express.urlencoded({ extended: true }));
@@ -79,9 +80,10 @@ app.use((req, res, next) => {
 
 // Montage des routes
 app.use('/users', usersRoutes);
-app.use('/reservations', reservationRoutes);
 app.use('/catways', catwayRoutes);
 app.use('/catways/:id/reservations', reservationRoutes);
+app.use('/reservations', reservationRoutes);
+app.use('/api/docs', documentationRoutes);
 
 // Route par défaut
 app.get('/', (req, res) => {
@@ -98,27 +100,74 @@ app.get('/dashboard', isAuthenticated, async (req, res) => {
         const Reservation = require('./models/reservations');
         const Catway = require('./models/catways');
 
-        // Statistiques de base des catways
+        // Statistiques des catways (visibles pour tous)
         const totalCatways = await Catway.countDocuments();
         const occupiedCatways = await Catway.countDocuments({ status: 'occupé' });
         const availableCatways = totalCatways - occupiedCatways;
 
+        // Données de base pour tous les utilisateurs
         const stats = {
             totalCatways,
             occupiedCatways,
             availableCatways
         };
 
-        // Réservations de l'utilisateur connecté
-        const activeReservations = await Reservation.find({
-            user: req.user._id,
-            endDate: { $gte: new Date() }
-        }).sort({ startDate: 1 });
+        let activeReservations = [];
+        let recentReservations = [];
+
+        if (req.user.role === 'admin') {
+            // Statistiques supplémentaires pour admin
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const newReservations = await Reservation.countDocuments({
+                createdAt: { $gte: today, $lt: tomorrow }
+            });
+
+            const activeCount = await Reservation.countDocuments({
+                startDate: { $lte: new Date() },
+                endDate: { $gte: new Date() }
+            });
+
+            const completedToday = await Reservation.countDocuments({
+                endDate: { $gte: today, $lt: tomorrow }
+            });
+
+            // Ajouter les statistiques admin
+            stats.newReservations = newReservations;
+            stats.activeReservations = activeCount;
+            stats.completedReservations = completedToday;
+
+            // Récupérer les réservations en cours et à venir pour admin
+            activeReservations = await Reservation.find({
+                endDate: { $gte: new Date() }
+            })
+            .populate('user')
+            .sort({ startDate: 1 });
+
+            // Récupérer l'historique des réservations (toutes les réservations passées)
+            recentReservations = await Reservation.find({
+                endDate: { $lt: new Date() }
+            })
+            .populate('user')
+            .sort({ endDate: -1 })
+            .limit(10);
+        } else {
+            // Pour les utilisateurs normaux, uniquement leurs réservations actives
+            activeReservations = await Reservation.find({
+                user: req.user._id,
+                endDate: { $gte: new Date() }
+            })
+            .sort({ startDate: 1 });
+        }
 
         res.render('dashboard/index', {
             title: 'Tableau de bord',
             stats,
             activeReservations,
+            recentReservations,
             currentPage: 'dashboard',
             layout: 'layouts/dashboard'
         });

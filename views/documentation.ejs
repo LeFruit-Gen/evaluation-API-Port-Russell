@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation de l'API - Port de Plaisance</title>
+  <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/doc.css">
+</head>
+<body>
+  <main class="container">
+    <h1>📚 Documentation de l'API - Capitainerie</h1>
+    <p>Cette documentation présente les routes disponibles pour interagir avec l'API de gestion du port de plaisance. Elle couvre les ressources suivantes :</p>
+    <ul>
+      <li><strong>Catways</strong> – passerelles de mouillage</li>
+      <li><strong>Réservations</strong> – réservations de catways par les plaisanciers</li>
+      <li><strong>Utilisateurs</strong> – gestion des accès à l'application (admin et utilisateur)</li>
+    </ul>
+    <h2>🔐 Authentification</h2>
+    <p>L'accès à certaines routes nécessite une authentification (middleware <code>authMiddleware</code>).</p>
+    <p>Les routes "catways", "réservations" et "users" sont protégées selon les rôles (admin ou utilisateur).</p>
+    <h2>🚤 Routes Catways</h2>
+    <ul>
+      <li><strong>GET</strong> /catways – Liste des catways</li>
+      <li><strong>GET</strong> /catways/:id – Détail d'un catway</li>
+      <li><strong>POST</strong> /catways – Créer un catway (admin)</li>
+      <li><strong>PUT</strong> /catways/:id – Modifier un catway (admin)</li>
+      <li><strong>DELETE</strong> /catways/:id – Supprimer un catway (admin)</li>
+    </ul>
+    <details>
+      <summary><strong>📘 Détails : GET /catways</strong></summary>
+      <p>Récupère la liste de tous les catways enregistrés dans le système.</p>
+      <h4>🔐 Accès : Utilisateur connecté requis</h4>
+      <h4>✅ Réponse (200 OK)</h4>
+      <pre><code>[
+  {
+    "catwayNumber": 1,
+    "catwayType": "short",
+    "catwayState": "bon état"
+  },
+  {
+    "catwayNumber": 2,
+    "catwayType": "short",
+    "catwayState": "bon état"
+  },
+  {
+    "catwayNumber": 3,
+    "catwayType": "long",
+    "catwayState": "réparé récemment"
+  }
+]</code></pre>
+    </details>
+    <details>
+      <summary><strong>🔧 Détails : PUT /catways/:id</strong></summary>
+      <p>Modifie uniquement l'état (description) du catway spécifié.</p>
+      <h4>🔐 Accès : Admin uniquement</h4>
+      <h4>📥 Requête attendue</h4>
+      <pre><code>{
+  "catwayState": "en réparation"
+}</code></pre>
+      <h4>⚠️ Remarques</h4>
+      <ul>
+        <li>Le numéro (<code>catwayNumber</code>) et le type (<code>catwayType</code>) ne peuvent pas être modifiés.</li>
+        <li>La modification concerne uniquement le champ <code>catwayState</code>, qui est une description libre de l'état de la passerelle.</li>
+      </ul>
+      <h4>✅ Réponse (200 OK)</h4>
+      <pre><code>{
+  "message": "Catway modifié avec succès"
+}</code></pre>
+    </details>
+    <h4>POST /catways</h4>
+    <pre><code>{
+  "catwayNumber": 1,
+  "catwayType": "short",
+  "catwayState": "disponible"
+}</code></pre>
+    <p>Les réservations sont considérées comme une sous-ressource des catways. 
+      L'accès aux données varie selon le rôle de l'utilisateur : les utilisateurs ne voient que leurs réservations actives, tandis que les administrateurs ont accès à la liste complète via une route dédiée.</p>
+    <h2>📅 Routes Réservations</h2>
+    <ul>
+      <li><strong>GET</strong> /reservations – Liste des réservations</li>
+      <li><strong>GET</strong> /reservations/:id – Détail</li>
+      <li><strong>POST</strong> /catways/:id/reservations – Créer pour un catway</li>
+      <li><strong>PUT</strong> /reservations/:id – Modifier</li>
+      <li><strong>DELETE</strong> /reservations/:id – Supprimer</li>
+    </ul>
+    <details>
+      <summary><strong>📘 Détails : GET /catways/:id/reservations</strong></summary>
+      <p>Récupère la liste des réservations associées à un catway spécifique.</p>
+      <h4>🔐 Accès : Utilisateur connecté requis</h4>
+      <p>Cette route permet d'afficher uniquement les réservations liées au catway spécifié par l'ID.</p>
+      <h4>✅ Réponse (200 OK)</h4>
+      <pre><code>[
+  {
+    "catwayNumber": 1,
+    "clientName": "Jean Dupont",
+    "boatName": "Le Flottant",
+    "startDate": "2025-04-05T00:00:00.000Z",
+    "endDate": "2025-04-10T00:00:00.000Z"
+  },
+  {
+    "catwayNumber": 1,
+    "clientName": "Marine Leroy",
+    "boatName": "Ocean Spirit",
+    "startDate": "2025-04-12T00:00:00.000Z",
+    "endDate": "2025-04-18T00:00:00.000Z"
+  }
+]</code></pre>
+    </details>
+    <details>
+      <summary><strong>📘 Détails : GET /reservations/all (admin uniquement)</strong></summary>
+      <p>Affiche l'ensemble des réservations, incluant celles à venir, en cours et passées.</p>
+      <h4>🔐 Accès : Admin uniquement</h4>
+      <p>Cette route permet une vision complète des réservations sur tous les catways.</p>
+      <h4>✅ Réponse (200 OK)</h4>
+      <pre><code>[
+  {
+    "catwayNumber": 2,
+    "clientName": "Luc Martin",
+    "boatName": "Vent du Large",
+    "startDate": "2025-03-29T00:00:00.000Z",
+    "endDate": "2025-04-03T00:00:00.000Z"
+  },
+  {
+    "catwayNumber": 5,
+    "clientName": "Nina Roy",
+    "boatName": "Capitaine Cool",
+    "startDate": "2025-04-05T00:00:00.000Z",
+    "endDate": "2025-04-07T00:00:00.000Z"
+  }
+]</code></pre>
+    </details>
+    <details>
+      <summary><strong>🔧 Détails : PUT /reservations/:id</strong></summary>
+      <p>Permet de modifier les informations d'une réservation existante.</p>
+      <h4>🔐 Accès :</h4>
+      <ul>
+        <li><strong>Admin</strong> : peut modifier toutes les réservations.</li>
+        <li><strong>User</strong> : ne peut modifier que ses propres réservations.</li>
+      </ul>
+      <h4>📥 Champs modifiables</h4>
+      <ul>
+        <li><code>clientName</code></li>
+        <li><code>boatName</code></li>
+        <li><code>startDate</code></li>
+        <li><code>endDate</code></li>
+      </ul>
+      <h4>📥 Exemple</h4>
+      <pre><code>{
+  "clientName": "Claire Dubois",
+  "boatName": "L'Évasion",
+  "startDate": "2025-04-08T00:00:00.000Z",
+  "endDate": "2025-04-12T00:00:00.000Z"
+}</code></pre>
+      <h4>✅ Réponse (200 OK)</h4>
+      <pre><code>{
+  "message": "Réservation modifiée avec succès"
+}</code></pre>
+    </details>
+    <h2>👥 Routes Utilisateurs</h2>
+    <ul>
+      <li><strong>GET</strong> /users – Liste des utilisateurs (admin)</li>
+      <li><strong>GET</strong> /users/:email – Détail utilisateur</li>
+      <li><strong>POST</strong> /users – Créer un utilisateur</li>
+      <li><strong>PUT</strong> /users/:email – Modifier</li>
+      <li><strong>DELETE</strong> /users/:email – Supprimer</li>
+      <li><strong>POST</strong> /login – Connexion</li>
+      <li><strong>GET</strong> /logout – Déconnexion</li>
+    </ul>
+    <details>
+      <summary><strong>📘 Détails : GET /users</strong></summary>
+      <p>Récupère la liste complète des utilisateurs enregistrés.</p>
+      <h4>🔐 Accès : Admin uniquement</h4>
+      <pre><code>[
+  {
+    "username": "admin",
+    "email": "admin@mail.com",
+    "role": "admin",
+    "createdAt": "2024-12-01T13:45:00.000Z",
+    "updatedAt": "2025-01-15T17:32:00.000Z"
+  }
+]</code></pre>
+    </details>
+    <h2>🔐 Codes HTTP courants</h2>
+    <ul>
+      <li><strong>200</strong> – OK</li>
+      <li><strong>201</strong> – Créé avec succès</li>
+      <li><strong>400</strong> – Requête invalide</li>
+      <li><strong>401</strong> – Non authentifié</li>
+      <li><strong>403</strong> – Non autorisé</li>
+      <li><strong>404</strong> – Ressource non trouvée</li>
+      <li><strong>500</strong> – Erreur serveur</li>
+    </ul>
+  </main>
+</body>
+</html>

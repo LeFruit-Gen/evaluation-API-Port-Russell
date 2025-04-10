@@ -1,0 +1,35 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Tableau de bord</h1>
+    </div>
+
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <div class="dashboard-content">
+        <div class="welcome-section">
+            <h2>Bienvenue, <%= currentUser.username %></h2>
+            <p>Gérez votre compte et accédez à vos fonctionnalités.</p>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Actions rapides</h3>
+            <div class="action-buttons">
+                <a href="/users/profile" class="btn btn-primary">Mon profil</a>
+                <% if (currentUser && currentUser.role === 'admin') { %>
+                    <a href="/users" class="btn btn-secondary">Gérer les utilisateurs</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

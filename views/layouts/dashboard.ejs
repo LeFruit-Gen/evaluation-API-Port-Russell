@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? `${title} - Port de Plaisance` : 'Port de Plaisance' %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Port de Plaisance</h2>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-details">
+                <p class="user-name"><%= currentUser.username %></p>
+                <p class="user-email"><%= currentUser.email %></p>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Tableau de bord</a></li>
+            <% if (currentUser && currentUser.role === 'admin') { %>
+                <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
+            <% } %>
+            <form action="/users/logout" method="POST">
+                <button type="submit" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </form>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <div class="content-header">
+            <div class="current-date">
+                <%= new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+            </div>
+        </div>
+        <div class="content-body">
+            <%- body %>
+        </div>
+    </main>
+    <% if (typeof scripts !== 'undefined') { %>
+        <% scripts.forEach(function(script) { %>
+            <script src="<%= script %>"></script>
+        <% }); %>
+    <% } %>
+</body>
+</html>

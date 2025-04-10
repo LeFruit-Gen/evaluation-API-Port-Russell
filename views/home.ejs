@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Port de Plaisance - Gestion des Catways</title>
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+</head>
+<body>
+    <div class="home-container">
+        <header class="home-header">
+            <h1>Port de Plaisance</h1>
+            <p class="subtitle">Système de Gestion des Catways</p>
+        </header>
+        <main class="home-main">
+            <section class="presentation">
+                <h2>Bienvenue sur notre plateforme</h2>
+                <p>Notre application vous permet de gérer facilement vos réservations de catways dans notre port de plaisance. 
+                   Profitez d'une interface intuitive pour :</p>
+                <ul>
+                    <li>Réserver votre place de port en quelques clics</li>
+                    <li>Gérer vos réservations existantes</li>
+                    <li>Consulter la disponibilité des catways</li>
+                    <li>Suivre l'état de vos demandes</li>
+                </ul>
+            </section>
+            <section class="auth-section">
+                <div class="auth-box">
+                    <h2>Connexion</h2>
+                    <% if (typeof error !== 'undefined') { %>
+                        <div class="error-message">
+                            <%= error %>
+                        </div>
+                    <% } %>
+                    <form action="/users/login" method="POST" class="login-form">
+                        <div class="form-group">
+                            <label for="email">Email :</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mot de passe :</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="auth-actions">
+                            <button type="submit" class="button button-primary">Se connecter</button>
+                            <a href="/users/register" class="button button-secondary">Créer un compte</a>
+                        </div>
+                        <a href="/users/forgot-password" class="forgot-password">Mot de passe oublié ?</a>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

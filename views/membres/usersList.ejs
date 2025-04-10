@@ -1,0 +1,58 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/dashboard" class="btn btn-secondary">← Retour au tableau de bord</a>
+        <h1 class="page-title">Liste des Utilisateurs</h1>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/users/new" class="btn btn-primary">Ajouter un utilisateur</a>
+        <% } %>
+    </div>
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="table-container">
+        <% if (users.length === 0) { %>
+            <p class="no-data">Aucun utilisateur trouvé.</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Date de création</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.role %></td>
+                            <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                            <td class="actions">
+                                <% if (currentUser && currentUser.role === 'admin') { %>
+                                    <a href="/users/edit/<%= user.email %>" class="btn btn-secondary">Modifier</a>
+                                    <a href="/users/<%= user.email %>/role" class="btn btn-secondary">Rôle</a>
+                                    <form action="/users/<%= user.email %>" method="POST" class="inline-form">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>

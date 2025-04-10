@@ -26,6 +26,7 @@
                     <td><%= catway.catwayType %></td>
                     <td><%= catway.catwayState %></td>
                     <td class="actions">
+                        <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-primary">Réserver</a>
                         <% if (currentUser && currentUser.role === 'admin') { %>
                             <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-secondary">Modifier</a>
                             <form action="/catways/<%= catway.catwayNumber %>" method="POST" class="inline-form">

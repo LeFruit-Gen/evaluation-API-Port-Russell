@@ -23,6 +23,7 @@
         <ul class="nav-links">
             <li><a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Tableau de bord</a></li>
             <li><a href="/catways" class="<%= currentPage === 'catways' ? 'active' : '' %>"><i class="fas fa-ship"></i> Catways</a></li>
+            <li><a href="/reservations/all" class="<%= currentPage === 'reservations' ? 'active' : '' %>"><i class="fas fa-calendar-alt"></i> Réservations</a></li>
             <li><a href="/users" class="<%= currentPage === 'users' ? 'active' : '' %>"><i class="fas fa-users"></i> Utilisateurs</a></li>
             <form action="/users/logout" method="POST">
                 <button type="submit" class="logout-button">

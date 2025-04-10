@@ -17,3 +17,49 @@
         </div>
     </div>
 </div>
+
+<div>
+    <h3>Mes réservations</h3>
+    <% if (activeReservations && activeReservations.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>N° Catway</th>
+                    <th>Bateau</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% activeReservations.forEach(reservation => { %>
+                    <tr>
+                        <td><%= reservation.catwayNumber %></td>
+                        <td><%= reservation.boatName %></td>
+                        <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                        <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                        <td>
+                            <% if (new Date(reservation.endDate) < new Date()) { %>
+                                Terminée
+                            <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
+                                En cours
+                            <% } else { %>
+                                À venir
+                            <% } %>
+                        </td>
+                        <td>
+                            <a href="/reservations/<%= reservation._id %>/edit">Modifier</a>
+                            <form action="/reservations/<%= reservation._id %>" method="POST" style="display: inline;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Vous n'avez aucune réservation en cours</p>
+    <% } %>
+</div>

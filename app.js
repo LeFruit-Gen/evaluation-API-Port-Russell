@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const catwayRoutes = require('./routes/catways');
+const reservationRoutes = require('./routes/reservations');
 const usersRoutes = require('./routes/users');
 require("dotenv").config({ path: "./.env/.env" });
 const flash = require('connect-flash');
@@ -78,7 +79,9 @@ app.use((req, res, next) => {
 
 // Montage des routes
 app.use('/users', usersRoutes);
+app.use('/reservations', reservationRoutes);
 app.use('/catways', catwayRoutes);
+app.use('/catways/:id/reservations', reservationRoutes);
 
 // Route par défaut
 app.get('/', (req, res) => {
@@ -92,6 +95,7 @@ app.get('/', (req, res) => {
 // Route du tableau de bord
 app.get('/dashboard', isAuthenticated, async (req, res) => {
     try {
+        const Reservation = require('./models/reservations');
         const Catway = require('./models/catways');
 
         // Statistiques de base des catways
@@ -105,9 +109,16 @@ app.get('/dashboard', isAuthenticated, async (req, res) => {
             availableCatways
         };
 
+        // Réservations de l'utilisateur connecté
+        const activeReservations = await Reservation.find({
+            user: req.user._id,
+            endDate: { $gte: new Date() }
+        }).sort({ startDate: 1 });
+
         res.render('dashboard/index', {
             title: 'Tableau de bord',
             stats,
+            activeReservations,
             currentPage: 'dashboard',
             layout: 'layouts/dashboard'
         });

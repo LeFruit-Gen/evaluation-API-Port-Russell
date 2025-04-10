@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= isEditing ? 'Modifier la réservation' : 'Nouvelle réservation' %></title>
+</head>
+<body>
+    <%- contentFor('body') %>  
+    <div class="container">
+        <div class="page-header">
+            <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">← Retour aux réservations</a>
+            <h1 class="page-title"><%= isEditing ? 'Modifier la réservation' : `Nouvelle réservation - Catway N°${catway.catwayNumber}` %></h1>
+        </div>
+        <% if (error && error.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+        <% } %>
+        <div class="form-container">
+            <form action="<%= isEditing ? `/catways/${catway.catwayNumber}/reservations/${reservation._id}` : `/catways/${catway.catwayNumber}/reservations` %>" method="POST">
+                <% if (isEditing) { %>
+                    <input type="hidden" name="_method" value="PUT">
+                <% } %>
+                <div class="form-group">
+                    <label>Catway</label>
+                    <div class="form-control-static">
+                        N°<%= catway.catwayNumber %> (<%= catway.catwayType %>) - <%= catway.catwayState %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="clientName">Nom du client</label>
+                    <input type="text" id="clientName" name="clientName" class="form-control" 
+                           value="<%= reservation ? reservation.clientName : user.username %>" 
+                           <%= !isEditing && user.role !== 'admin' ? 'readonly' : '' %> required>
+                </div>
+                <div class="form-group">
+                    <label for="boatName">Nom du bateau</label>
+                    <input type="text" id="boatName" name="boatName" class="form-control" 
+                           value="<%= reservation ? reservation.boatName : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Date de début</label>
+                    <input type="datetime-local" id="startDate" name="startDate" class="form-control" 
+                           value="<%= reservation ? new Date(reservation.startDate).toISOString().slice(0, 16) : '' %>" 
+                           min="<%= new Date().toISOString().slice(0, 16) %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Date de fin</label>
+                    <input type="datetime-local" id="endDate" name="endDate" class="form-control" 
+                           value="<%= reservation ? new Date(reservation.endDate).toISOString().slice(0, 16) : '' %>"
+                           min="<%= new Date().toISOString().slice(0, 16) %>" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><%= isEditing ? 'Modifier' : 'Créer' %></button>
+                    <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

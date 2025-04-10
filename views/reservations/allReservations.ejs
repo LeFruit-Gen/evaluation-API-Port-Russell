@@ -1,0 +1,66 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/dashboard" class="btn btn-secondary">← Retour au tableau de bord</a>
+        <h1 class="page-title">Liste Complète des Réservations</h1>
+        <a href="/catways" class="btn btn-primary">Nouvelle Réservation</a>
+    </div>
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="table-container">
+        <% if (reservations.length === 0) { %>
+            <p class="no-data">Aucune réservation trouvée.</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Catway N°</th>
+                        <th>Client</th>
+                        <th>Bateau</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reservations.forEach(reservation => { %>
+                        <tr>
+                            <td><%= reservation.catwayNumber %></td>
+                            <td><%= reservation.clientName %></td>
+                            <td><%= reservation.boatName %></td>
+                            <td><%= new Date(reservation.startDate).toLocaleDateString() %></td>
+                            <td><%= new Date(reservation.endDate).toLocaleDateString() %></td>
+                            <td>
+                                <% if (new Date(reservation.endDate) < new Date()) { %>
+                                    <span class="status-badge status-ended">Terminée</span>
+                                <% } else if (new Date(reservation.startDate) <= new Date() && new Date(reservation.endDate) >= new Date()) { %>
+                                    <span class="status-badge status-active">En cours</span>
+                                <% } else { %>
+                                    <span class="status-badge status-upcoming">À venir</span>
+                                <% } %>
+                            </td>
+                            <td class="actions">
+                                <a href="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-secondary">Modifier</a>
+                                <form action="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>" method="POST" class="inline-form">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="returnTo" value="all">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>

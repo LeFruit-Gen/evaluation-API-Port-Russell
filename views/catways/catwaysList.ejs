@@ -1,0 +1,56 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/dashboard" class="btn btn-secondary">← Retour au tableau de bord</a>
+        <h1 class="page-title">Liste des Catways</h1>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/catways/new" class="btn btn-primary">Ajouter un catway</a>
+        <% } %>
+    </div>
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="table-container">
+        <% if (catways.length === 0) { %>
+            <p class="no-data">Aucun catway trouvé.</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Type</th>
+                        <th>État</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% catways.forEach(catway => { %>
+                        <tr>
+                            <td><%= catway.catwayNumber %></td>
+                            <td><%= catway.catwayType %></td>
+                            <td><%= catway.catwayState %></td>
+                            <td class="actions">
+                                <a href="/catways/<%= catway.catwayNumber %>" class="btn btn-secondary">Détails</a>
+                                <% if (currentUser && currentUser.role === 'admin') { %>
+                                    <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-secondary">Modifier</a>
+                                    <form action="/catways/<%= catway.catwayNumber %>" method="POST" class="inline-form">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>

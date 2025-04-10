@@ -1,0 +1,45 @@
+<%- contentFor('body') %>
+
+<div class="container">
+    <div class="page-header">
+        <a href="/catways" class="btn btn-secondary">← Retour aux catways</a>
+        <h1 class="page-title"><%= isEditing ? "Modifier" : "Créer" %> un Catway</h1>
+    </div>
+    <% if (error) { %>
+        <div class="alert alert-danger">
+            <%= error %>
+        </div>
+    <% } %>
+    <div class="form-container">
+        <form action="<%= isEditing ? '/catways/' + catway.catwayNumber : '/catways' %>" method="POST">
+            <% if (isEditing) { %>
+                <input type="hidden" name="_method" value="PUT">
+            <% } %>
+            <div class="form-group">
+                <label for="catwayNumber">Numéro du Catway</label>
+                <input type="number" id="catwayNumber" name="catwayNumber" class="form-control"
+                    value="<%= catway ? catway.catwayNumber : '' %>" 
+                    <%= isEditing ? 'readonly' : 'required' %>>
+            </div>
+            <div class="form-group">
+                <label for="catwayType">Type du Catway</label>
+                <select id="catwayType" name="catwayType" class="form-control" <%= isEditing ? 'disabled' : 'required' %>>
+                    <option value="short" <%= catway && catway.catwayType === 'short' ? 'selected' : '' %>>Short</option>
+                    <option value="long" <%= catway && catway.catwayType === 'long' ? 'selected' : '' %>>Long</option>
+                </select>
+                <% if (isEditing) { %>
+                    <small class="form-text text-muted">Le type ne peut pas être modifié une fois le catway créé.</small>
+                <% } %>
+            </div>
+            <div class="form-group">
+                <label for="catwayState">État du Catway</label>
+                <input type="text" id="catwayState" name="catwayState" class="form-control"
+                    value="<%= catway ? catway.catwayState : '' %>" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><%= isEditing ? "Modifier" : "Créer" %></button>
+                <a href="/catways" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
